@@ -1,0 +1,21 @@
+#######################################
+# Syntax Coloring Map For NonBlockingDallas
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+WarmTheSDS011	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+update	KEYWORD2
+onIntervalElapsed	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
