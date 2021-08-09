@@ -22,12 +22,14 @@
 
 #include "WarmTheSDS011.h"
 
+SDS011 _sds011;
 
-WarmTheSds011::WarmTheSds011(SDS011 *sds011){
-    _sds011 = sds011;
+WarmTheSDS011::WarmTheSDS011(uint8_t pin_rx, uint8_t pin_tx){
+    _sds011.begin(pin_rx, pin_tx);
+    delay(2000);
 }
 
-void WarmTheSds011::begin(unsigned long readingInterval, unsigned long warmupTime){
+void WarmTheSDS011::begin(unsigned long readingInterval, unsigned long warmupTime){
     _currentState = sleeping;
     _warmupTimeMillis = warmupTime;
     _sdsReadingInterval = readingInterval;
@@ -39,24 +41,43 @@ void WarmTheSds011::begin(unsigned long readingInterval, unsigned long warmupTim
 //									PRIVATE
 //==============================================================================================
 
-void WarmTheSds011::sleepSensor(){
-    if(_lastReadingMillis != 0 && (millis() - _lastReadingMillis < _sdsReadingInterval - warmupTime)) return;
-    _sds011->wakeup();
+void WarmTheSDS011::sleepSensor(){
+    if(_lastReadingMillis != 0 && (millis() - _lastReadingMillis < _sdsReadingInterval - _warmupTimeMillis)) return;
+    _sds011.wakeup();
     _startWarmupMillis = millis();
     _currentState = warmingup;
+
+    #ifdef DEBUG_SDS011
+        Serial.println("SDS011: warming up");
+    #endif
 }
 
-void WarmTheSds011::warmupSensor(){
+void WarmTheSDS011::warmupSensor(){
     if(millis() - _startWarmupMillis < _warmupTimeMillis) return;
     _currentState = reading;
+
+    #ifdef DEBUG_SDS011
+        Serial.println("SDS011: start new reading");
+    #endif
 }
 
-void WarmTheSds011::readSensor(){
+void WarmTheSDS011::readSensor(){
     float p25, p10;
     int error = _sds011.read(&p25,&p10);
-    _sds011->sleep();
+    
+    #ifdef DEBUG_SDS011
+        Serial.print("SDS011: pm2.5 ");
+        Serial.print(p25);
+        Serial.print(" pm10 ");
+        Serial.println(p10);
+        Serial.println("SDS011: sleeping");
+    #endif
+
+    delay(200);
+    _sds011.sleep();
     _lastReadingMillis = millis();
     _currentState = sleeping;
+
     if(cb_onIntervalElapsed)(*cb_onIntervalElapsed)(p25, p10, error == 0);
 }
 
@@ -64,7 +85,7 @@ void WarmTheSds011::readSensor(){
 //									PUBLIC
 //==============================================================================================
 
-void WarmTheSds011::update(){
+void WarmTheSDS011::update(){
     switch(_currentState){
         case sleeping:
             sleepSensor();

@@ -26,11 +26,13 @@
 #include <Arduino.h>
 #include <SDS011.h>
 
-class WarmTheSds011{
+#define DEBUG_SDS011
+
+class WarmTheSDS011{
 
 public:
 
-    WarmTheSds011(SDS011 *sds011);
+    WarmTheSDS011(uint8_t pin_rx, uint8_t pin_tx);
     void begin(unsigned long readingInterval, unsigned long warmupTime);
 	void update();
 	void onIntervalElapsed(void(*callback)(float pm25, float pm10, bool valid)) {
@@ -40,12 +42,11 @@ public:
 private:
 
     enum sensorState {
-		sleeping
+		sleeping,
         warmingup,
 		reading
 	};
 
-    SDS011 _sds011;
     sensorState _currentState;
     unsigned long _lastReadingMillis;
     unsigned long _warmupTimeMillis;
@@ -57,4 +58,6 @@ private:
     void readSensor();
 
     void(*cb_onIntervalElapsed)(float pm25, float pm10, bool valid);
-}
+};
+
+#endif
