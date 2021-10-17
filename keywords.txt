@@ -1,5 +1,5 @@
 #######################################
-# Syntax Coloring Map For NonBlockingDallas
+# Syntax Coloring Map For WarmTheSDS011
 #######################################
 
 #######################################
@@ -13,6 +13,7 @@ WarmTheSDS011	KEYWORD1
 
 begin	KEYWORD2
 update	KEYWORD2
+requestPollution	KEYWORD2
 onIntervalElapsed	KEYWORD2
 
 #######################################

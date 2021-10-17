@@ -43,13 +43,7 @@ void WarmTheSDS011::begin(unsigned long readingInterval, unsigned long warmupTim
 
 void WarmTheSDS011::sleepSensor(){
     if(_lastReadingMillis != 0 && (millis() - _lastReadingMillis < _sdsReadingInterval - _warmupTimeMillis)) return;
-    _sds011.wakeup();
-    _startWarmupMillis = millis();
-    _currentState = warmingup;
-
-    #ifdef DEBUG_SDS011
-        Serial.println("SDS011: warming up");
-    #endif
+    requestPollution();
 }
 
 void WarmTheSDS011::warmupSensor(){
@@ -97,4 +91,14 @@ void WarmTheSDS011::update(){
             readSensor();
         break;
     }
+}
+
+void WarmTheSDS011::requestPollution(){
+    _currentState = warmingup;
+    _startWarmupMillis = millis();
+    _sds011.wakeup();
+    
+    #ifdef DEBUG_SDS011
+        Serial.println("SDS011: warming up");
+    #endif
 }

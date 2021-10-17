@@ -35,6 +35,7 @@ public:
     WarmTheSDS011(uint8_t pin_rx, uint8_t pin_tx);
     void begin(unsigned long readingInterval, unsigned long warmupTime);
 	void update();
+    void requestPollution();
 	void onIntervalElapsed(void(*callback)(float pm25, float pm10, bool valid)) {
 		cb_onIntervalElapsed = callback;
 	}
