@@ -93,6 +93,10 @@ void WarmTheSDS011::update(){
     }
 }
 
+bool WarmTheSDS011::isBusy(){
+    return _currentState != sleeping;
+}
+
 void WarmTheSDS011::requestPollution(){
     _currentState = warmingup;
     _startWarmupMillis = millis();

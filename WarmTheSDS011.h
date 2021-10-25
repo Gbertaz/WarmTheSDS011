@@ -36,6 +36,7 @@ public:
     void begin(unsigned long readingInterval, unsigned long warmupTime);
 	void update();
     void requestPollution();
+    bool isBusy();
 	void onIntervalElapsed(void(*callback)(float pm25, float pm10, bool valid)) {
 		cb_onIntervalElapsed = callback;
 	}
